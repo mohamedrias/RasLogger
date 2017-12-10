@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  RasLogger
 //
-//  Created by mohamedrias@gmail.com on 12/10/2017.
-//  Copyright (c) 2017 mohamedrias@gmail.com. All rights reserved.
+//  Created by mohamedrias on 12/10/2017.
+//  Copyright (c) 2017 mohamedrias. All rights reserved.
 //
 
 import UIKit

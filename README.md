@@ -1,6 +1,6 @@
 # RasLogger
 
-[![CI Status](http://img.shields.io/travis/mohamedrias@gmail.com/RasLogger.svg?style=flat)](https://travis-ci.org/mohamedrias/RasLogger)
+[![CI Status](http://img.shields.io/travis/mohamedrias/RasLogger.svg?style=flat)](https://travis-ci.org/mohamedrias/RasLogger)
 [![Version](https://img.shields.io/cocoapods/v/RasLogger.svg?style=flat)](http://cocoapods.org/pods/RasLogger)
 [![License](https://img.shields.io/cocoapods/l/RasLogger.svg?style=flat)](http://cocoapods.org/pods/RasLogger)
 [![Platform](https://img.shields.io/cocoapods/p/RasLogger.svg?style=flat)](http://cocoapods.org/pods/RasLogger)

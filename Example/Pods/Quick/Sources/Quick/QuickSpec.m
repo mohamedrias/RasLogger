@@ -1,9 +1,12 @@
 #import "QuickSpec.h"
 #import "QuickConfiguration.h"
+#import "NSString+QCKSelectorName.h"
 #import "World.h"
-#import <Quick/Quick-Swift.h>
+#import <objc/runtime.h>
 
 static QuickSpec *currentSpec = nil;
+
+const void * const QCKExampleKey = &QCKExampleKey;
 
 @interface QuickSpec ()
 @property (nonatomic, strong) Example *example;
@@ -60,15 +63,22 @@ static QuickSpec *currentSpec = nil;
     
     for (Example *example in examples) {
         SEL selector = [self addInstanceMethodForExample:example classSelectorNames:selectorNames];
-
-        NSMethodSignature *signature = [self instanceMethodSignatureForSelector:selector];
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-        invocation.selector = selector;
-
+        NSInvocation *invocation = [self invocationForInstanceMethodWithSelector:selector
+                                                                         example:example];
         [invocations addObject:invocation];
     }
 
     return invocations;
+}
+
+/**
+ XCTest sets the invocation for the current test case instance using this setter.
+ QuickSpec hooks into this event to give the test case a reference to the current example.
+ It will need this reference to correctly report its name to XCTest.
+ */
+- (void)setInvocation:(NSInvocation *)invocation {
+    self.example = objc_getAssociatedObject(invocation, QCKExampleKey);
+    [super setInvocation:invocation];
 }
 
 #pragma mark - Public Interface
@@ -95,14 +105,21 @@ static QuickSpec *currentSpec = nil;
  */
 + (SEL)addInstanceMethodForExample:(Example *)example classSelectorNames:(NSMutableSet<NSString*> *)selectorNames {
     IMP implementation = imp_implementationWithBlock(^(QuickSpec *self){
-        self.example = example;
         currentSpec = self;
         [example run];
     });
+    NSCharacterSet *characterSet = [NSCharacterSet alphanumericCharacterSet];
+    NSMutableString *sanitizedFileName = [NSMutableString string];
+    for (NSUInteger i = 0; i < example.callsite.file.length; i++) {
+        unichar ch = [example.callsite.file characterAtIndex:i];
+        if ([characterSet characterIsMember:ch]) {
+            [sanitizedFileName appendFormat:@"%c", ch];
+        }
+    }
 
-    const char *types = [[NSString stringWithFormat:@"%s%s%s", @encode(void), @encode(id), @encode(SEL)] UTF8String];
+    const char *types = [[NSString stringWithFormat:@"%s%s%s", @encode(id), @encode(id), @encode(SEL)] UTF8String];
     
-    NSString *originalName = example.name.qck_c99ExtendedIdentifier;
+    NSString *originalName = example.name.qck_selectorName;
     NSString *selectorName = originalName;
     NSUInteger i = 2;
     
@@ -116,6 +133,18 @@ static QuickSpec *currentSpec = nil;
     class_addMethod(self, selector, implementation, types);
 
     return selector;
+}
+
++ (NSInvocation *)invocationForInstanceMethodWithSelector:(SEL)selector
+                                                  example:(Example *)example {
+    NSMethodSignature *signature = [self instanceMethodSignatureForSelector:selector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    invocation.selector = selector;
+    objc_setAssociatedObject(invocation,
+                             QCKExampleKey,
+                             example,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return invocation;
 }
 
 /**
