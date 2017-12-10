@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'RasLogger'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of RasLogger.'
+  s.version          = '1.0.0'
+  s.summary          = 'Modern logger for iOS App.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -21,12 +21,12 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/mohamedrias@gmail.com/RasLogger'
+  s.homepage         = 'https://github.com/mohamedrias/RasLogger'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'mohamedrias@gmail.com' => 'mohamed.rias@cbd.ae' }
-  s.source           = { :git => 'https://github.com/mohamedrias@gmail.com/RasLogger.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.author           = { 'Mohamed Rias' => 'mohamedrias@gmail.com' }
+  s.source           = { :git => 'https://github.com/mohamedrias/RasLogger.git', :tag => s.version.to_s }
+  # s.social_media_url = 'https://twitter.com/mohamed_rias'
 
   s.ios.deployment_target = '8.0'
 
