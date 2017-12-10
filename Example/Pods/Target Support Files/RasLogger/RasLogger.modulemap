@@ -1,0 +1,6 @@
+framework module RasLogger {
+  umbrella header "RasLogger-umbrella.h"
+
+  export *
+  module * { export * }
+}
